@@ -1,0 +1,62 @@
+import Application.Model.Message;
+import Application.DAO.MessageDAO;
+import java.io.*;
+import java.util.*;
+public class MessageService {
+    private MessageDAO messageDAO;
+   
+    public MessageService(){
+        messageDAO = new MessageDAO();
+    }
+    public MessageService(MessageDAO messageDAO){
+        this.messageDAO = messageDAO;
+    }
+    public List<Message> getAllMessages() {
+        return messageDAO.getAllMessages();
+    }
+    public Account getAccountbyID(int id){
+        return accountDAO.getAccountbyID(id);
+    }
+    public Account getAccountbyUsername(String username){
+        return accountDAO.getAccountbyUsername(username);
+    }
+    public Author addAccount(String username,String password) throws IllegalArgumentException {
+        try{
+            if(accountDAO.getAccountbyUsername(username)!=null) throw new IllegalArgumentException("Username already exists");
+            if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
+            return accountDAO.addAccount(username,password);
+        }
+        catch(IllegalArgumentException e){
+            return null;
+
+        }
+    }
+    public boolean Validatelogin(String username,String password){
+        return accountDAO.login_valid(username,password);
+        if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
+
+    }
+    public Account updatePassword(String username,String password,String newpassword) throws IllegalArgumentException {
+        try{
+            if(accountDAO.Validatelogin(username,password)==false) throw new IllegalArgumentException("Invalid login");
+            if(newpassword.length()<5) throw new IllegalArgumentException("New password too short");
+            return accountDAO.updateAccountPassword(username,password,newpassword);
+        }
+        catch(IllegalArgumentException e){
+            return null;
+        }
+
+    }
+    public boolean deleteAccount(String username,String password) throws IllegalArgumentException{
+        try{
+            if(accountDAO.Validatelogin(username,password)==false){
+                throw new IllegalArgumentException("Invalid login");
+            }
+            return deleteAccount(username,password);
+        }
+        catch(IllegalArgumentException e){
+            return false;
+        }
+    }
+
+}
