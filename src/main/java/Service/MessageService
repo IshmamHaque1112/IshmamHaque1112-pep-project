@@ -14,45 +14,30 @@ public class MessageService {
     public List<Message> getAllMessages() {
         return messageDAO.getAllMessages();
     }
-    public Account getAccountbyID(int id){
-        return accountDAO.getAccountbyID(id);
+    public Message getMessagebyId(int id){
+        return messageDAO.getMessagebyId(id);
     }
-    public Account getAccountbyUsername(String username){
-        return accountDAO.getAccountbyUsername(username);
+    public List<Message> getMessagesbyAuthorID(int authorid){
+        return messageDAO.getAllAccountMessages(authorid);
     }
-    public Author addAccount(String username,String password) throws IllegalArgumentException {
+    public Message createMessage(int authorid,String message_text,Long timepost){
+        return messageDAO.insertMessage(authorid,message_text,timepost);
+    }
+    public Message updateMessage(int authorid,int messageid,String newmessage_text) throws IllegalArgumentException{
+      try{
+        if(messageDAO.getMessagebyId().getPosted_by()!=authorid) throw IllegalArgumentException("Message author is not as same as current author");
+        return messageDAO.updateMessage(message_id,newmessage_text);
+      }
+      catch(IllegalArgumentException e){
+        return null;
+      }
+    }
+    public boolean deleteMessage(int authorid,int message_id) throws IllegalArgumentException{
         try{
-            if(accountDAO.getAccountbyUsername(username)!=null) throw new IllegalArgumentException("Username already exists");
-            if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
-            return accountDAO.addAccount(username,password);
-        }
-        catch(IllegalArgumentException e){
-            return null;
-
-        }
-    }
-    public boolean Validatelogin(String username,String password){
-        return accountDAO.login_valid(username,password);
-        if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
-
-    }
-    public Account updatePassword(String username,String password,String newpassword) throws IllegalArgumentException {
-        try{
-            if(accountDAO.Validatelogin(username,password)==false) throw new IllegalArgumentException("Invalid login");
-            if(newpassword.length()<5) throw new IllegalArgumentException("New password too short");
-            return accountDAO.updateAccountPassword(username,password,newpassword);
-        }
-        catch(IllegalArgumentException e){
-            return null;
-        }
-
-    }
-    public boolean deleteAccount(String username,String password) throws IllegalArgumentException{
-        try{
-            if(accountDAO.Validatelogin(username,password)==false){
+            if(messageDAO.getMessagebyId().getPosted_by()!=authorid){
                 throw new IllegalArgumentException("Invalid login");
             }
-            return deleteAccount(username,password);
+            return messageDAO.deleteMessage(message_id);
         }
         catch(IllegalArgumentException e){
             return false;
