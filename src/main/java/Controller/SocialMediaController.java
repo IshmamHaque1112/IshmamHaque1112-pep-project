@@ -5,6 +5,8 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import Model.Account;
 import Model.Message;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import Service.AccountService;
 import Service.MessageService;
 
@@ -21,6 +23,10 @@ public class SocialMediaController {
      */
     private final AccountService accountService;
     private final MessageService messageService;
+    public LibraryController(){
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+    }
      public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
