@@ -1,5 +1,6 @@
-import Application.Model.Message;
-import Application.DAO.MessageDAO;
+package Service;
+import Model.Message;
+import DAO.MessageDAO;
 import java.io.*;
 import java.util.*;
 public class MessageService {
@@ -12,7 +13,7 @@ public class MessageService {
         this.messageDAO = messageDAO;
     }
     public List<Message> getAllMessages() {
-        return messageDAO.getAllMessages();
+        return messageDAO.getallMessages();
     }
     public Message getMessagebyId(int id){
         return messageDAO.getMessagebyId(id);
@@ -25,8 +26,8 @@ public class MessageService {
     }
     public Message updateMessage(int authorid,int messageid,String newmessage_text) throws IllegalArgumentException{
       try{
-        if(messageDAO.getMessagebyId().getPosted_by()!=authorid) throw IllegalArgumentException("Message author is not as same as current author");
-        return messageDAO.updateMessage(message_id,newmessage_text);
+        if(messageDAO.getMessagebyId(messageid).getPosted_by()!=authorid) throw new IllegalArgumentException("Message author is not as same as current author");
+        return messageDAO.updateMessage(messageid,newmessage_text);
       }
       catch(IllegalArgumentException e){
         return null;
@@ -34,7 +35,7 @@ public class MessageService {
     }
     public boolean deleteMessage(int authorid,int message_id) throws IllegalArgumentException{
         try{
-            if(messageDAO.getMessagebyId().getPosted_by()!=authorid){
+            if(messageDAO.getMessagebyId(message_id).getPosted_by()!=authorid){
                 throw new IllegalArgumentException("Invalid login");
             }
             return messageDAO.deleteMessage(message_id);

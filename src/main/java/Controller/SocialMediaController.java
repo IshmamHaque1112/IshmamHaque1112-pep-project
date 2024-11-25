@@ -5,6 +5,8 @@ import io.javalin.Javalin;
 import io.javalin.http.Context;
 import Model.Account;
 import Model.Message;
+import DAO.AccountDAO;
+import DAO.MessageDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import Service.AccountService;
@@ -23,7 +25,7 @@ public class SocialMediaController {
      */
     private final AccountService accountService;
     private final MessageService messageService;
-    public LibraryController(){
+    public SocialMediaController(){
         this.accountService = new AccountService();
         this.messageService = new MessageService();
     }
