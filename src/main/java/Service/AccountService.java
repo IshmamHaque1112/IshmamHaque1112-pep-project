@@ -21,11 +21,22 @@ public class AccountService {
     public Account getAccountbyUsername(String username){
         return accountDAO.getAccountbyUsername(username);
     }
-    public Account addAccount(String username,String password) throws IllegalArgumentException {
+    public Account insertAccount(String username,String password) throws IllegalArgumentException {
         try{
             if(accountDAO.getAccountbyUsername(username)!=null) throw new IllegalArgumentException("Username already exists");
             if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
-            return accountDAO.createAccount(username,password);
+            return accountDAO.insertAccount(username,password);
+        }
+        catch(IllegalArgumentException e){
+            return null;
+
+        }
+    }
+    public Account insertAccount(Account account) throws IllegalArgumentException {
+        try{
+            if(accountDAO.getAccountbyUsername(account.getUsername())!=null) throw new IllegalArgumentException("Username already exists");
+            if((account.getUsername().length()<5)||(account.getPassword().length()<5)) throw new IllegalArgumentException("Username or password too short");
+            return accountDAO.insertAccount(account);
         }
         catch(IllegalArgumentException e){
             return null;

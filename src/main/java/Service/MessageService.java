@@ -21,8 +21,11 @@ public class MessageService {
     public List<Message> getMessagesbyAuthorID(int authorid){
         return messageDAO.getAllAccountMessages(authorid);
     }
-    public Message createMessage(int authorid,String message_text,Long timepost){
+    public Message insertMessage(int authorid,String message_text,Long timepost){
         return messageDAO.insertMessage(authorid,message_text,timepost);
+    }
+    public Message insertMessage(Message message){
+        return messageDAO.insertMessage(message);
     }
     public Message updateMessage(int authorid,int messageid,String newmessage_text) throws IllegalArgumentException{
       try{
