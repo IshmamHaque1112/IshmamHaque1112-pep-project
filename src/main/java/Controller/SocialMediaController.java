@@ -32,6 +32,16 @@ public class SocialMediaController {
      public Javalin startAPI() {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
+        app.get("/accounts", this::getAllAccountsHandler);
+        app.get("/messages", this::getAllMessagesHandler);
+        app.post("/messages", this::postMessageHandler);
+        app.post("/accounts", this::postAccountHandler);
+        app.delete("/messages", this::deleteMessageHandler);
+        app.delete("/accounts", this::deleteAccountHandler);
+        app.post("/login", this::loginAccountHandler);
+        app.post("/register", this::registerAccountHandler);
+
+        app.start(8080);
 
         return app;
     }
@@ -42,6 +52,44 @@ public class SocialMediaController {
      */
     private void exampleHandler(Context context) {
         context.json("sample text");
+    }
+    private void getAllAccountsHandler(Context ctx) {
+        List<Account> accounts = accountService.getAllAccounts();
+        ctx.json(accounts);
+    }
+    private void getAllMessagesHandler(Context ctx) {
+        List<Message> authors = messageService.getAllMessages();
+        ctx.json(authors);
+    }
+    private void postMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message addedMessage = messageService.insertMessage(message);
+        if(addedMessage!=null){
+            ctx.json(mapper.writeValueAsString(addedMessage));
+        }else{
+            ctx.status(400);
+        }
+    }
+    private void postAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addedAccount = accountService.insertAccount(account);
+        if(addedAccount!=null){
+            ctx.json(mapper.writeValueAsString(addedAccount));
+        }else{
+            ctx.status(400);
+        }
+    }
+    private void deleteMessageHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class);
+        Message delete_message = messageService.deleteMessage(message);
+        if(delete_message!=null){
+            ctx.json(mapper.writeValueAsString(delete_message));
+        }else{
+            ctx.status(400);
+        }
     }
 
 

@@ -36,7 +36,7 @@ public class MessageService {
         return null;
       }
     }
-    public boolean deleteMessage(int authorid,int message_id) throws IllegalArgumentException{
+    public Message deleteMessage(int authorid,int message_id) throws IllegalArgumentException{
         try{
             if(messageDAO.getMessagebyId(message_id).getPosted_by()!=authorid){
                 throw new IllegalArgumentException("Invalid login");
@@ -44,8 +44,11 @@ public class MessageService {
             return messageDAO.deleteMessage(message_id);
         }
         catch(IllegalArgumentException e){
-            return false;
+            return null;
         }
+    }
+    public Message deleteMessage(Message message){
+        return messageDAO.deleteMessage(message.getMessage_id());
     }
 
 }

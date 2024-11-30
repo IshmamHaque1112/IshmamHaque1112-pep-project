@@ -117,21 +117,22 @@ public class AccountDAO {
         }
         return null;
     }
-    public boolean deleteAccount(String username,String password){
+    public Account deleteAccount(String username,String password){
         Connection connection=ConnectionUtil.getConnection();
         try{
             String sql = "Delete from account where username=? and password=?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
-            if(login_valid(username, password)==false) return false;
+            if(login_valid(username, password)==false) return null;
+            Account deletedaccount=getAccountbyUsername(username);
             preparedStatement.executeUpdate();
-            return true;
+            return deletedaccount;
         }
         catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        return false;
+        return null;
     }
 
 }

@@ -24,7 +24,7 @@ public class AccountService {
     public Account insertAccount(String username,String password) throws IllegalArgumentException {
         try{
             if(accountDAO.getAccountbyUsername(username)!=null) throw new IllegalArgumentException("Username already exists");
-            if((username.length()<5)||(password.length()<5)) throw new IllegalArgumentException("Username or password too short");
+            if((username.length()<5)||(password.length()<4)) throw new IllegalArgumentException("Username or password too short");
             return accountDAO.insertAccount(username,password);
         }
         catch(IllegalArgumentException e){
@@ -35,7 +35,7 @@ public class AccountService {
     public Account insertAccount(Account account) throws IllegalArgumentException {
         try{
             if(accountDAO.getAccountbyUsername(account.getUsername())!=null) throw new IllegalArgumentException("Username already exists");
-            if((account.getUsername().length()<5)||(account.getPassword().length()<5)) throw new IllegalArgumentException("Username or password too short");
+            if((account.getUsername().length()<5)||(account.getPassword().length()<4)) throw new IllegalArgumentException("Username or password too short");
             return accountDAO.insertAccount(account);
         }
         catch(IllegalArgumentException e){
@@ -49,7 +49,7 @@ public class AccountService {
     public Account updatePassword(String username,String password,String newpassword) throws IllegalArgumentException {
         try{
             if(accountDAO.login_valid(username,password)==false) throw new IllegalArgumentException("Invalid login");
-            if(newpassword.length()<5) throw new IllegalArgumentException("New password too short");
+            if(newpassword.length()<4) throw new IllegalArgumentException("New password too short");
             return accountDAO.updateAccountPassword(username,password,newpassword);
         }
         catch(IllegalArgumentException e){
@@ -57,7 +57,7 @@ public class AccountService {
         }
 
     }
-    public boolean deleteAccount(String username,String password) throws IllegalArgumentException{
+    public Account deleteAccount(String username,String password) throws IllegalArgumentException{
         try{
             if(accountDAO.login_valid(username,password)==false){
                 throw new IllegalArgumentException("Invalid login");
@@ -65,7 +65,7 @@ public class AccountService {
             return accountDAO.deleteAccount(username,password);
         }
         catch(IllegalArgumentException e){
-            return false;
+            return null;
         }
     }
 
