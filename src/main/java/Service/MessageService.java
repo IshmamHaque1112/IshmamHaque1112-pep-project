@@ -18,14 +18,28 @@ public class MessageService {
     public Message getMessagebyId(int id){
         return messageDAO.getMessagebyId(id);
     }
-    public List<Message> getMessagesbyAuthorID(int authorid){
+    public List<Message> getMessagesbyAccountID(int authorid){
         return messageDAO.getAllAccountMessages(authorid);
     }
-    public Message insertMessage(int authorid,String message_text,Long timepost){
+    public Message insertMessage(int authorid,String message_text,Long timepost) throws IllegalAccessException{
+        try{
+        if(message_text.length()==0) throw new IllegalArgumentException("Blank message");
+        if(message_text.length()>255) throw new IllegalArgumentException("Message longer than 255 characters");
         return messageDAO.insertMessage(authorid,message_text,timepost);
+        }
+        catch(IllegalArgumentException e){
+            return null;
+        }
     }
-    public Message insertMessage(Message message){
-        return messageDAO.insertMessage(message);
+    public Message insertMessage(Message message) throws IllegalArgumentException{
+        try{
+            if(message.getMessage_text().length()==0) throw new IllegalArgumentException("Blank message");
+            if(message.getMessage_text().length()>255) throw new IllegalArgumentException("Message longer than 255 characters");
+            return messageDAO.insertMessage(message);
+            }
+            catch(IllegalArgumentException e){
+                return null;
+            }
     }
     public Message updateMessage(int authorid,int messageid,String newmessage_text) throws IllegalArgumentException{
       try{

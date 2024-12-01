@@ -24,7 +24,7 @@ public class AccountService {
     public Account insertAccount(String username,String password) throws IllegalArgumentException {
         try{
             if(accountDAO.getAccountbyUsername(username)!=null) throw new IllegalArgumentException("Username already exists");
-            if((username.length()<5)||(password.length()<4)) throw new IllegalArgumentException("Username or password too short");
+            if((username.length()<4)||(password.length()<4)) throw new IllegalArgumentException("Username or password too short");
             return accountDAO.insertAccount(username,password);
         }
         catch(IllegalArgumentException e){
@@ -35,7 +35,7 @@ public class AccountService {
     public Account insertAccount(Account account) throws IllegalArgumentException {
         try{
             if(accountDAO.getAccountbyUsername(account.getUsername())!=null) throw new IllegalArgumentException("Username already exists");
-            if((account.getUsername().length()<5)||(account.getPassword().length()<4)) throw new IllegalArgumentException("Username or password too short");
+            if((account.getUsername().length()<4)||(account.getPassword().length()<4)) throw new IllegalArgumentException("Username or password too short");
             return accountDAO.insertAccount(account);
         }
         catch(IllegalArgumentException e){
