@@ -60,11 +60,17 @@ public class AccountDAO {
         }
         return null;
     }
-    public boolean login_valid(String username,String password){
+    public Account login_valid(String username,String password){
         Account returnedaccount=getAccountbyUsername(username);
-        if(returnedaccount==null) return false;
-        if(returnedaccount.getPassword()==password) return true;
-        else return false;
+        if(returnedaccount==null) return null;
+        if(returnedaccount.getPassword()==password) return returnedaccount;
+        else return null;
+    }
+    public Account login_valid(Account account){
+        Account returnedaccount=getAccountbyUsername(account.getUsername());
+        if(returnedaccount==null) return null;
+        if(returnedaccount.getPassword()==account.getPassword()) return returnedaccount;
+        else return null;
     }
     public Account insertAccount(String username,String password){
         Connection connection = ConnectionUtil.getConnection();
@@ -109,7 +115,7 @@ public class AccountDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, newpassword);
             preparedStatement.setString(2, username);     
-            if(login_valid(username, password)==false) return null;       
+            if(login_valid(username, password)==null) return null;       
             preparedStatement.executeUpdate();
             return getAccountbyUsername(username);
         }catch(SQLException e){
@@ -124,8 +130,25 @@ public class AccountDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, password);
-            if(login_valid(username, password)==false) return null;
+            if(login_valid(username, password)==null) return null;
             Account deletedaccount=getAccountbyUsername(username);
+            preparedStatement.executeUpdate();
+            return deletedaccount;
+        }
+        catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    public Account deleteAccount(Account account){
+        Connection connection=ConnectionUtil.getConnection();
+        try{
+            String sql = "Delete from account where username=? and password=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
+            if(login_valid(account.getUsername(),account.getPassword())==null) return null;
+            Account deletedaccount=getAccountbyUsername(account.getUsername());
             preparedStatement.executeUpdate();
             return deletedaccount;
         }

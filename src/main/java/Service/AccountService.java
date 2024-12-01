@@ -43,12 +43,15 @@ public class AccountService {
 
         }
     }
-    public boolean Validatelogin(String username,String password){
+    public Account Validatelogin(String username,String password){
         return accountDAO.login_valid(username,password);
+    }
+    public Account Validatelogin(Account account){
+        return accountDAO.login_valid(account.getUsername(),account.getPassword());
     }
     public Account updatePassword(String username,String password,String newpassword) throws IllegalArgumentException {
         try{
-            if(accountDAO.login_valid(username,password)==false) throw new IllegalArgumentException("Invalid login");
+            if(accountDAO.login_valid(username,password)==null) throw new IllegalArgumentException("Invalid login");
             if(newpassword.length()<4) throw new IllegalArgumentException("New password too short");
             return accountDAO.updateAccountPassword(username,password,newpassword);
         }
@@ -59,7 +62,7 @@ public class AccountService {
     }
     public Account deleteAccount(String username,String password) throws IllegalArgumentException{
         try{
-            if(accountDAO.login_valid(username,password)==false){
+            if(accountDAO.login_valid(username,password)==null){
                 throw new IllegalArgumentException("Invalid login");
             }
             return accountDAO.deleteAccount(username,password);
@@ -67,6 +70,10 @@ public class AccountService {
         catch(IllegalArgumentException e){
             return null;
         }
+    }
+    public Account deleteAccount(Account account){
+        return accountDAO.deleteAccount(account);
+
     }
 
 }

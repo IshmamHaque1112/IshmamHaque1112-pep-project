@@ -34,12 +34,15 @@ public class SocialMediaController {
         app.get("example-endpoint", this::exampleHandler);
         app.get("/accounts", this::getAllAccountsHandler);
         app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages", this::getAllMessagesbyIDHandler);
         app.post("/messages", this::postMessageHandler);
         app.post("/accounts", this::postAccountHandler);
         app.delete("/messages", this::deleteMessageHandler);
         app.delete("/accounts", this::deleteAccountHandler);
         app.post("/login", this::loginAccountHandler);
         app.post("/register", this::registerAccountHandler);
+        app.patch("/messages", this::updateMessageHandler);
+
 
         app.start(8080);
 
@@ -58,8 +61,8 @@ public class SocialMediaController {
         ctx.json(accounts);
     }
     private void getAllMessagesHandler(Context ctx) {
-        List<Message> authors = messageService.getAllMessages();
-        ctx.json(authors);
+        List<Message> messages = messageService.getAllMessages();
+        ctx.json(messages);
     }
     private void postMessageHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
@@ -87,6 +90,36 @@ public class SocialMediaController {
         Message delete_message = messageService.deleteMessage(message);
         if(delete_message!=null){
             ctx.json(mapper.writeValueAsString(delete_message));
+        }else{
+            ctx.status(400);
+        }
+    }
+    private void deleteAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account delete_account = accountService.deleteAccount(account);
+        if(delete_account!=null){
+            ctx.json(mapper.writeValueAsString(delete_account));
+        }else{
+            ctx.status(400);
+        }
+    }
+    private void registerAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addedAccount = accountService.insertAccount(account);
+        if(addedAccount!=null){
+            ctx.json(mapper.writeValueAsString(addedAccount));
+        }else{
+            ctx.status(400);
+        }
+    }
+    private void loginAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account loginAccount = accountService.Validatelogin(account);
+        if(loginAccount!=null){
+            ctx.json(mapper.writeValueAsString(loginAccount));
         }else{
             ctx.status(400);
         }
