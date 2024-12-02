@@ -43,12 +43,26 @@ public class MessageService {
     }
     public Message updateMessage(int authorid,int messageid,String newmessage_text) throws IllegalArgumentException{
       try{
+        if(newmessage_text.length()==0) throw new IllegalArgumentException("Blank message");
+        if(newmessage_text.length()>255) throw new IllegalArgumentException("Message longer than 255 characters");
+        if(messageDAO.getMessagebyId(messageid)==null) throw new IllegalArgumentException("Message does not exist");
         if(messageDAO.getMessagebyId(messageid).getPosted_by()!=authorid) throw new IllegalArgumentException("Message author is not as same as current author");
         return messageDAO.updateMessage(messageid,newmessage_text);
       }
       catch(IllegalArgumentException e){
         return null;
       }
+    }
+    public Message updateMessage(int messageid,String newmessage_text) throws IllegalArgumentException{
+        try{
+          if(newmessage_text.length()==0) throw new IllegalArgumentException("Blank message");
+          if(newmessage_text.length()>255) throw new IllegalArgumentException("Message longer than 255 characters");
+          if(messageDAO.getMessagebyId(messageid)==null) throw new IllegalArgumentException("Message does not exist");
+          return messageDAO.updateMessage(messageid,newmessage_text);
+        }
+        catch(IllegalArgumentException e){
+          return null;
+        }
     }
     public Message deleteMessage(int authorid,int message_id) throws IllegalArgumentException{
         try{
@@ -63,6 +77,9 @@ public class MessageService {
     }
     public Message deleteMessage(Message message){
         return messageDAO.deleteMessage(message.getMessage_id());
+    }
+    public Message deleteMessage(int message_id){
+        return messageDAO.deleteMessage(message_id);
     }
 
 }

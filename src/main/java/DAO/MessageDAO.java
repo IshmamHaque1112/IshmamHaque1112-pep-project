@@ -152,6 +152,9 @@ public class MessageDAO {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, message_id);
             Message deletedmessage=getMessagebyId(message_id);
+            if(deletedmessage==null){
+                return null;
+            }
             preparedStatement.executeUpdate();
             return deletedmessage;
         }

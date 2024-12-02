@@ -44,7 +44,7 @@ public class SocialMediaController {
         app.patch("/messages/{message_id}", this::updateMessageHandler);
 
 
-        app.start(8080);
+        //app.start(8080);
 
         return app;
     }
@@ -98,7 +98,7 @@ public class SocialMediaController {
     private void deleteMessagebyIDHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         int message_id=Integer.parseInt(Objects.requireNonNull(ctx.pathParam("message_id")));
-        Message delete_message = messageService.deleteMessage(messageService.getMessagebyId(message_id).getPosted_by(),message_id);
+        Message delete_message = messageService.deleteMessage(message_id);
         if(delete_message!=null){
             ctx.json(mapper.writeValueAsString(delete_message));
             ctx.status(200);
@@ -119,8 +119,10 @@ public class SocialMediaController {
     }
     private void updateMessageHandler(Context ctx) throws JsonProcessingException{
         ObjectMapper mapper = new ObjectMapper();
+        int message_id=Integer.parseInt(Objects.requireNonNull(ctx.pathParam("message_id")));
         Message message = mapper.readValue(ctx.body(), Message.class);
-        Message updatedMessage = messageService.updateMessage(message.getPosted_by(),message.getMessage_id(),message.getMessage_text());
+        //Message messagetoupdate=messageService.getMessagebyId(message_id);
+        Message updatedMessage = messageService.updateMessage(message_id,message.getMessage_text());
         if(updatedMessage!=null){
             ctx.json(mapper.writeValueAsString(updatedMessage));
             ctx.status(200);
@@ -143,12 +145,12 @@ public class SocialMediaController {
     private void loginAccountHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class);
-        Account loginAccount = accountService.Validatelogin(account);
+        Account loginAccount = accountService.Validatelogin(account.getUsername(), account.getPassword());
         if(loginAccount!=null){
             ctx.json(mapper.writeValueAsString(loginAccount));
             ctx.status(200);
         }else{
-            ctx.status(400);
+            ctx.status(401);
         }
     }
 

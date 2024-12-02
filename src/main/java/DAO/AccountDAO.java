@@ -61,16 +61,32 @@ public class AccountDAO {
         return null;
     }
     public Account login_valid(String username,String password){
+        //System.out.println(username+" "+password);
         Account returnedaccount=getAccountbyUsername(username);
-        if(returnedaccount==null) return null;
-        if(returnedaccount.getPassword()==password) return returnedaccount;
-        else return null;
+        if(returnedaccount==null){
+            System.out.println("Null found");
+            return null;
+        }
+        //System.out.println(returnedaccount.getUsername()+" "+returnedaccount.getPassword());
+        if(returnedaccount.getPassword().equals(password)){ 
+            System.out.println("logged in");
+            return returnedaccount;
+        }
+        return null;
     }
     public Account login_valid(Account account){
+        //System.out.println(account.getUsername()+" "+account.getPassword());
         Account returnedaccount=getAccountbyUsername(account.getUsername());
-        if(returnedaccount==null) return null;
-        if(returnedaccount.getPassword()==account.getPassword()) return returnedaccount;
-        else return null;
+        if(returnedaccount==null){
+            System.out.println("Null found"); 
+            return null;
+        }
+        //System.out.println(returnedaccount.getUsername()+" "+returnedaccount.getPassword());
+        if(returnedaccount.getPassword().equals(account.getPassword())){
+            System.out.println("logged in");  
+            return returnedaccount;
+        }
+        return null;
     }
     public Account insertAccount(String username,String password){
         Connection connection = ConnectionUtil.getConnection();
